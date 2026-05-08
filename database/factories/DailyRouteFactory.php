@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\Controller;
+use App\Models\Inspector;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -21,7 +21,7 @@ class DailyRouteFactory extends Factory
         $completed = fake()->numberBetween(0, $planned);
 
         return [
-            'controller_id' => Controller::factory(),
+            'inspector_id' => Inspector::factory(),
             'route_date' => fake()->dateTimeBetween('-30 days', 'now')->format('Y-m-d'),
             'planned_points_count' => $planned,
             'completed_points_count' => $completed,

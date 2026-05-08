@@ -15,8 +15,8 @@ class Team extends Model
         'description',
     ];
 
-    public function controllers(): HasMany
+    public function inspectors(): HasMany
     {
-        return $this->hasMany(Controller::class);
+        return $this->hasMany(Inspector::class);
     }
 }

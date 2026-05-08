@@ -12,7 +12,7 @@ class DailyRoute extends Model
     use HasFactory;
 
     protected $fillable = [
-        'controller_id',
+        'inspector_id',
         'route_date',
         'planned_points_count',
         'completed_points_count',
@@ -26,9 +26,9 @@ class DailyRoute extends Model
         'average_speed' => 'decimal:2',
     ];
 
-    public function controller(): BelongsTo
+    public function inspector(): BelongsTo
     {
-        return $this->belongsTo(Controller::class);
+        return $this->belongsTo(Inspector::class);
     }
 
     public function routePoints(): HasMany

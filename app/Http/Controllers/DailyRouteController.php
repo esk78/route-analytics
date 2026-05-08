@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Controller as RouteController;
+use App\Models\Inspector;
 use App\Models\DailyRoute;
 use App\Models\Team;
 use Illuminate\Http\Request;
@@ -13,20 +13,20 @@ class DailyRouteController extends Controller
     {
         $teams = Team::query()->orderBy('name')->get();
 
-        $controllers = RouteController::query()->with('team')->orderBy('name')->get();
+        $inspectors = Inspector::query()->with('team')->orderBy('name')->get();
 
         $routes = DailyRoute::query()
             ->with([
-                'controller.team',
+                'inspector.team',
                 'routePoints',
             ])
             ->when($request->filled('team_id'), function ($query) use ($request) {
-                $query->whereHas('controller', function ($controllerQuery) use ($request) {
-                    $controllerQuery->where('team_id', $request->integer('team_id'));
+                $query->whereHas('inspector', function ($inspectorQuery) use ($request) {
+                    $inspectorQuery->where('team_id', $request->integer('team_id'));
                 });
             })
-            ->when($request->filled('controller_id'), function ($query) use ($request) {
-                $query->where('controller_id', $request->integer('controller_id'));
+            ->when($request->filled('inspector_id'), function ($query) use ($request) {
+                $query->where('inspector_id', $request->integer('inspector_id'));
             })
             ->when($request->filled('date_from'), function ($query) use ($request) {
                 $query->whereDate('route_date', '>=', $request->date('date_from'));
@@ -39,7 +39,38 @@ class DailyRouteController extends Controller
         return view('daily-routes.index', [
             'routes' => $routes,
             'teams' => $teams,
-            'controllers' => $controllers,
+            'inspectors' => $inspectors,
+        ]);
+    }
+
+    public function show(DailyRoute $dailyRoute)
+    {
+        $dailyRoute->load([
+            'inspector.team',
+            'routePoints.checkpoint',
+        ]);
+
+        $routePoints = $dailyRoute->routePoints()
+            ->with('checkpoint')
+            ->orderBy('visited_at')
+            ->get();
+
+        $mapPoints = $routePoints->map(function ($point) {
+            return [
+                'name' => $point->checkpoint?->name ?? 'Custom point',
+                'latitude' => (float) $point->latitude,
+                'longitude' => (float) $point->longitude,
+                'visited_at' => $point->visited_at->format('Y-m-d H:i:s'),
+                'is_planned' => (bool) $point->is_planned,
+                'is_visited' => (bool) $point->is_visited,
+                'speed_from_previous' => $point->speed_from_previous,
+            ];
+        })->values();
+
+        return view('daily-routes.show', [
+            'route' => $dailyRoute,
+            'routePoints' => $routePoints,
+            'mapPoints' => $mapPoints,
         ]);
     }
 }

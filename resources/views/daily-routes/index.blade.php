@@ -41,23 +41,23 @@
                             </div>
 
                             <div>
-                                <label for="controller_id" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Controller
+                                <label for="inspector_id" class="block text-sm font-medium text-gray-700 mb-1">
+                                    Inspector
                                 </label>
 
                                 <select
-                                    id="controller_id"
-                                    name="controller_id"
+                                    id="inspector_id"
+                                    name="inspector_id"
                                     class="w-full border-gray-300 rounded-md shadow-sm"
                                 >
-                                    <option value="">All controllers</option>
+                                    <option value="">All inspectors</option>
 
-                                    @foreach ($controllers as $controller)
+                                    @foreach ($inspectors as $inspector)
                                         <option
-                                            value="{{ $controller->id }}"
-                                            @selected((string) request('controller_id') === (string) $controller->id)
+                                            value="{{ $inspector->id }}"
+                                            @selected((string) request('inspector_id') === (string) $inspector->id)
                                         >
-                                            {{ $controller->name }} — {{ $controller->team->name }}
+                                            {{ $inspector->name }} — {{ $inspector->team->name }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -115,12 +115,13 @@
                                 <tr>
                                     <th class="border px-4 py-2 text-left">Date</th>
                                     <th class="border px-4 py-2 text-left">Team</th>
-                                    <th class="border px-4 py-2 text-left">Controller</th>
+                                    <th class="border px-4 py-2 text-left">Inspector</th>
                                     <th class="border px-4 py-2 text-right">Planned</th>
                                     <th class="border px-4 py-2 text-right">Completed</th>
                                     <th class="border px-4 py-2 text-right">Completion</th>
                                     <th class="border px-4 py-2 text-right">Avg speed</th>
                                     <th class="border px-4 py-2 text-right">Points</th>
+                                    <th class="border px-4 py-2 text-right">Actions</th>
                                 </tr>
                             </thead>
 
@@ -132,11 +133,11 @@
                                         </td>
 
                                         <td class="border px-4 py-2">
-                                            {{ $route->controller->team->name }}
+                                            {{ $route->inspector->team->name }}
                                         </td>
 
                                         <td class="border px-4 py-2">
-                                            {{ $route->controller->name }}
+                                            {{ $route->inspector->name }}
                                         </td>
 
                                         <td class="border px-4 py-2 text-right">
@@ -158,10 +159,19 @@
                                         <td class="border px-4 py-2 text-right">
                                             {{ $route->routePoints->count() }}
                                         </td>
+
+                                        <td class="border px-4 py-2 text-right">
+                                            <a
+                                                href="{{ route('daily-routes.show', $route) }}"
+                                                class="text-blue-600 hover:underline"
+                                            >
+                                                View
+                                            </a>
+                                        </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="border px-4 py-4 text-center text-gray-500">
+                                        <td colspan="9" class="border px-4 py-4 text-center text-gray-500">
                                             No routes found.
                                         </td>
                                     </tr>

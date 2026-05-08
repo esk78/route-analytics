@@ -18,7 +18,7 @@ class CheckpointFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => 'Checkpoint ' . fake()->unique()->numberBetween(1, 1000000),
+            'name' => 'Checkpoint '.fake()->unique()->numberBetween(1, 1000000),
 
             // Координати приблизно в межах Він.обл.
             'latitude' => fake()->randomFloat(7, 49.85, 48.08),

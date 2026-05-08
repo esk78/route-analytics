@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('daily_routes', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('controller_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('inspector_id')->constrained()->cascadeOnDelete();
 
             $table->date('route_date');
 
@@ -26,7 +26,7 @@ return new class extends Migration
 
             $table->timestamps();
 
-            $table->unique(['controller_id', 'route_date']);
+            $table->unique(['inspector_id', 'route_date']);
         });
     }
 

@@ -2,13 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Checkpoint;
+use App\Models\DailyRoute;
+use App\Models\Inspector;
+use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\Checkpoint;
-use App\Models\Controller;
-use App\Models\DailyRoute;
-use App\Models\Team;
 use Illuminate\Support\Carbon;
 
 class DatabaseSeeder extends Seeder
@@ -25,60 +25,61 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
+            'password' => bcrypt('11111111'),
         ]);
 
         $checkpoints = Checkpoint::factory()->count(300)->create();
 
         Team::factory()->count(5)->create()->each(function (Team $team) use ($checkpoints) {
-                $controllers = Controller::factory()->count(4)->create([
-                        'team_id' => $team->id,
+            $inspectors = Inspector::factory()->count(4)->create([
+                'team_id' => $team->id,
+            ]);
+
+            foreach ($inspectors as $inspector) {
+                for ($day = 0; $day < 7; $day++) {
+                    $routeDate = now()->subDays($day)->toDateString();
+
+                    $plannedPointsCount = fake()->numberBetween(10, 30);
+
+                    $dailyRoute = DailyRoute::create([
+                        'inspector_id' => $inspector->id,
+                        'route_date' => $routeDate,
+                        'planned_points_count' => $plannedPointsCount,
+                        'completed_points_count' => 0,
+                        'completion_percentage' => 0,
+                        'average_speed' => null,
                     ]);
 
-                foreach ($controllers as $controller) {
-                    for ($day = 0; $day < 7; $day++) {
-                        $routeDate = now()->subDays($day)->toDateString();
+                    $plannedCheckpoints = $checkpoints->random($plannedPointsCount);
 
-                        $plannedPointsCount = fake()->numberBetween(10, 30);
+                    $visitedCount = fake()->numberBetween(5, $plannedPointsCount);
 
-                        $dailyRoute = DailyRoute::create([
-                            'controller_id' => $controller->id,
-                            'route_date' => $routeDate,
-                            'planned_points_count' => $plannedPointsCount,
-                            'completed_points_count' => 0,
-                            'completion_percentage' => 0,
-                            'average_speed' => null,
-                        ]);
+                    $visitedAt = Carbon::parse($routeDate)->setHour(9);
 
-                        $plannedCheckpoints = $checkpoints->random($plannedPointsCount);
+                    foreach ($plannedCheckpoints->take($visitedCount) as $index => $checkpoint) {
+                        $visitedAt = $visitedAt->addMinutes(fake()->numberBetween(5, 25));
 
-                        $visitedCount = fake()->numberBetween(5, $plannedPointsCount);
-
-                        $visitedAt = Carbon::parse($routeDate)->setHour(9);
-
-                        foreach ($plannedCheckpoints->take($visitedCount) as $index => $checkpoint) {
-                            $visitedAt = $visitedAt->addMinutes(fake()->numberBetween(5, 25));
-
-                            $dailyRoute->routePoints()->create([
-                                'checkpoint_id' => $checkpoint->id,
-                                'latitude' => $checkpoint->latitude,
-                                'longitude' => $checkpoint->longitude,
-                                'visited_at' => $visitedAt,
-                                'sequence_order' => $index + 1,
-                                'is_planned' => true,
-                                'is_visited' => true,
-                                'speed_from_previous' => $index === 0
-                                    ? null
-                                    : fake()->randomFloat(2, 20, 80),
-                            ]);
-                        }
-
-                        $dailyRoute->update([
-                            'completed_points_count' => $visitedCount,
-                            'completion_percentage' => round(($visitedCount / $plannedPointsCount) * 100, 2),
-                            'average_speed' => $dailyRoute->routePoints()->whereNotNull('speed_from_previous')->avg('speed_from_previous'),
+                        $dailyRoute->routePoints()->create([
+                            'checkpoint_id' => $checkpoint->id,
+                            'latitude' => $checkpoint->latitude,
+                            'longitude' => $checkpoint->longitude,
+                            'visited_at' => $visitedAt,
+                            'sequence_order' => $index + 1,
+                            'is_planned' => true,
+                            'is_visited' => true,
+                            'speed_from_previous' => $index === 0
+                                ? null
+                                : fake()->randomFloat(2, 20, 80),
                         ]);
                     }
+
+                    $dailyRoute->update([
+                        'completed_points_count' => $visitedCount,
+                        'completion_percentage' => round(($visitedCount / $plannedPointsCount) * 100, 2),
+                        'average_speed' => $dailyRoute->routePoints()->whereNotNull('speed_from_previous')->avg('speed_from_previous'),
+                    ]);
                 }
-            });
+            }
+        });
     }
 }
