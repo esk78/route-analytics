@@ -39,9 +39,9 @@ class SimulateInspectorRoutes extends Command
             return self::FAILURE;
         }
 
-        $checkpoints = Checkpoint::query()->get();
+        $checkpointsCount = Checkpoint::query()->count();
 
-        if ($checkpoints->count() < 100) {
+        if ($checkpointsCount < 100) {
             $this->error('Not enough checkpoints found. Please run seeders first.');
 
             return self::FAILURE;
@@ -68,7 +68,26 @@ class SimulateInspectorRoutes extends Command
 
             $dailyRoute->routePoints()->delete();
 
-            $plannedCheckpoints = $checkpoints->random($plannedPointsCount);
+            $baseCheckpoint = Checkpoint::query()
+                ->inRandomOrder()
+                ->first();
+
+            $plannedCheckpoints = Checkpoint::query()
+                ->near(
+                    (float) $baseCheckpoint->latitude,
+                    (float) $baseCheckpoint->longitude,
+                    0.7
+                )
+                ->inRandomOrder()
+                ->limit($plannedPointsCount)
+                ->get();
+
+            if ($plannedCheckpoints->count() < $plannedPointsCount) {
+                $plannedCheckpoints = Checkpoint::query()
+                    ->inRandomOrder()
+                    ->limit($plannedPointsCount)
+                    ->get();
+            }
 
             $visitedCount = fake()->numberBetween(
                 min(5, $plannedPointsCount),
@@ -121,9 +140,16 @@ class SimulateInspectorRoutes extends Command
             $extraPointsCount = fake()->numberBetween(0, 3);
 
             if ($extraPointsCount > 0) {
-                $extraCheckpoints = $checkpoints
+                $extraCheckpoints = Checkpoint::query()
                     ->whereNotIn('id', $plannedCheckpoints->pluck('id'))
-                    ->random($extraPointsCount);
+                    ->near(
+                        (float) $baseCheckpoint->latitude,
+                        (float) $baseCheckpoint->longitude,
+                        0.9
+                    )
+                    ->inRandomOrder()
+                    ->limit($extraPointsCount)
+                    ->get();
 
                 foreach ($extraCheckpoints as $extraCheckpoint) {
                     $travelMinutes = fake()->numberBetween(5, 20);
