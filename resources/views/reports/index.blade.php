@@ -22,13 +22,8 @@
                                     Date from
                                 </label>
 
-                                <input
-                                    id="date_from"
-                                    type="date"
-                                    name="date_from"
-                                    value="{{ request('date_from') }}"
-                                    class="w-full border-gray-300 rounded-md shadow-sm"
-                                >
+                                <input id="date_from" type="date" name="date_from" value="{{ request('date_from') }}"
+                                    class="w-full border-gray-300 rounded-md shadow-sm">
                             </div>
 
                             <div>
@@ -36,27 +31,18 @@
                                     Date to
                                 </label>
 
-                                <input
-                                    id="date_to"
-                                    type="date"
-                                    name="date_to"
-                                    value="{{ request('date_to') }}"
-                                    class="w-full border-gray-300 rounded-md shadow-sm"
-                                >
+                                <input id="date_to" type="date" name="date_to" value="{{ request('date_to') }}"
+                                    class="w-full border-gray-300 rounded-md shadow-sm">
                             </div>
 
                             <div class="flex items-end gap-2">
-                                <button
-                                    type="submit"
-                                    class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700"
-                                >
+                                <button type="submit"
+                                    class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700">
                                     Filter
                                 </button>
 
-                                <a
-                                    href="{{ route('reports.index') }}"
-                                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
-                                >
+                                <a href="{{ route('reports.index') }}"
+                                    class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300">
                                     Reset
                                 </a>
                             </div>
@@ -66,7 +52,7 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
                     <div class="text-sm text-gray-500">Routes</div>
                     <div class="text-3xl font-bold">{{ $summary['routes_count'] }}</div>
@@ -78,8 +64,13 @@
                 </div>
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
-                    <div class="text-sm text-gray-500">Completed points</div>
+                    <div class="text-sm text-gray-500">Completed planned</div>
                     <div class="text-3xl font-bold">{{ $summary['completed_points'] }}</div>
+                </div>
+
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
+                    <div class="text-sm text-gray-500">Extra points</div>
+                    <div class="text-3xl font-bold">{{ $summary['extra_points'] }}</div>
                 </div>
 
                 <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg p-6">
@@ -105,7 +96,9 @@
                                     <th class="border px-4 py-2 text-left">Team</th>
                                     <th class="border px-4 py-2 text-right">Routes</th>
                                     <th class="border px-4 py-2 text-right">Planned</th>
-                                    <th class="border px-4 py-2 text-right">Completed</th>
+                                    <th class="border px-4 py-2 text-right">Completed planned</th>
+                                    <th class="border px-4 py-2 text-right">Extra</th>
+                                    <th class="border px-4 py-2 text-right">Total visited</th>
                                     <th class="border px-4 py-2 text-right">Completion</th>
                                     <th class="border px-4 py-2 text-right">Avg speed</th>
                                 </tr>
@@ -128,6 +121,14 @@
 
                                         <td class="border px-4 py-2 text-right">
                                             {{ $report['completed_points'] }}
+                                        </td>
+
+                                        <td class="border px-4 py-2 text-right">
+                                            {{ $report['extra_points'] }}
+                                        </td>
+
+                                        <td class="border px-4 py-2 text-right">
+                                            {{ $report['total_visited_points'] }}
                                         </td>
 
                                         <td class="border px-4 py-2 text-right">
@@ -161,7 +162,9 @@
                                     <th class="border px-4 py-2 text-left">Team</th>
                                     <th class="border px-4 py-2 text-right">Routes</th>
                                     <th class="border px-4 py-2 text-right">Planned</th>
-                                    <th class="border px-4 py-2 text-right">Completed</th>
+                                    <th class="border px-4 py-2 text-right">Completed planned</th>
+                                    <th class="border px-4 py-2 text-right">Extra</th>
+                                    <th class="border px-4 py-2 text-right">Total visited</th>
                                     <th class="border px-4 py-2 text-right">Completion</th>
                                     <th class="border px-4 py-2 text-right">Avg speed</th>
                                 </tr>
@@ -188,6 +191,14 @@
 
                                         <td class="border px-4 py-2 text-right">
                                             {{ $report['completed_points'] }}
+                                        </td>
+
+                                        <td class="border px-4 py-2 text-right">
+                                            {{ $report['extra_points'] }}
+                                        </td>
+
+                                        <td class="border px-4 py-2 text-right">
+                                            {{ $report['total_visited_points'] }}
                                         </td>
 
                                         <td class="border px-4 py-2 text-right">

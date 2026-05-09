@@ -14,9 +14,27 @@ class ReportController extends Controller
         $dateFrom = $request->input('date_from');
         $dateTo = $request->input('date_to');
 
+        $routesQuery = DailyRoute::query()
+            ->with([
+                'inspector.team',
+                'plannedRoutePoints',
+                'routePoints',
+            ])
+            ->when($dateFrom, function ($query) use ($dateFrom) {
+                $query->whereDate('route_date', '>=', $dateFrom);
+            })
+            ->when($dateTo, function ($query) use ($dateTo) {
+                $query->whereDate('route_date', '<=', $dateTo);
+            });
+
+        $routes = $routesQuery->get();
+
+        $summary = $this->buildReportData($routes);
+
         $teamReports = Team::query()
             ->with(['inspectors.dailyRoutes' => function ($query) use ($dateFrom, $dateTo) {
                 $query
+                    ->with(['plannedRoutePoints', 'routePoints'])
                     ->when($dateFrom, function ($query) use ($dateFrom) {
                         $query->whereDate('route_date', '>=', $dateFrom);
                     })
@@ -30,24 +48,16 @@ class ReportController extends Controller
                 $routes = $team->inspectors
                     ->flatMap(fn (Inspector $inspector) => $inspector->dailyRoutes);
 
-                $planned = $routes->sum('planned_points_count');
-                $completed = $routes->sum('completed_points_count');
-
-                return [
-                    'team' => $team,
-                    'routes_count' => $routes->count(),
-                    'planned_points' => $planned,
-                    'completed_points' => $completed,
-                    'completion_percentage' => $planned > 0
-                        ? round(($completed / $planned) * 100, 2)
-                        : 0,
-                    'average_speed' => round((float) $routes->avg('average_speed'), 2),
-                ];
+                return array_merge(
+                    ['team' => $team],
+                    $this->buildReportData($routes)
+                );
             });
 
         $inspectorReports = Inspector::query()
             ->with(['team', 'dailyRoutes' => function ($query) use ($dateFrom, $dateTo) {
                 $query
+                    ->with(['plannedRoutePoints', 'routePoints'])
                     ->when($dateFrom, function ($query) use ($dateFrom) {
                         $query->whereDate('route_date', '>=', $dateFrom);
                     })
@@ -58,49 +68,49 @@ class ReportController extends Controller
             ->orderBy('name')
             ->get()
             ->map(function (Inspector $inspector) {
-                $routes = $inspector->dailyRoutes;
-
-                $planned = $routes->sum('planned_points_count');
-                $completed = $routes->sum('completed_points_count');
-
-                return [
-                    'inspector' => $inspector,
-                    'routes_count' => $routes->count(),
-                    'planned_points' => $planned,
-                    'completed_points' => $completed,
-                    'completion_percentage' => $planned > 0
-                        ? round(($completed / $planned) * 100, 2)
-                        : 0,
-                    'average_speed' => round((float) $routes->avg('average_speed'), 2),
-                ];
+                return array_merge(
+                    ['inspector' => $inspector],
+                    $this->buildReportData($inspector->dailyRoutes)
+                );
             });
-
-        $summaryRoutes = DailyRoute::query()
-            ->when($dateFrom, function ($query) use ($dateFrom) {
-                $query->whereDate('route_date', '>=', $dateFrom);
-            })
-            ->when($dateTo, function ($query) use ($dateTo) {
-                $query->whereDate('route_date', '<=', $dateTo);
-            })
-            ->get();
-
-        $summaryPlanned = $summaryRoutes->sum('planned_points_count');
-        $summaryCompleted = $summaryRoutes->sum('completed_points_count');
-
-        $summary = [
-            'routes_count' => $summaryRoutes->count(),
-            'planned_points' => $summaryPlanned,
-            'completed_points' => $summaryCompleted,
-            'completion_percentage' => $summaryPlanned > 0
-                ? round(($summaryCompleted / $summaryPlanned) * 100, 2)
-                : 0,
-            'average_speed' => round((float) $summaryRoutes->avg('average_speed'), 2),
-        ];
 
         return view('reports.index', [
             'teamReports' => $teamReports,
             'inspectorReports' => $inspectorReports,
             'summary' => $summary,
         ]);
+    }
+
+    private function buildReportData($routes): array
+    {
+        $plannedPoints = $routes->sum(function (DailyRoute $route) {
+            return $route->plannedRoutePoints->count();
+        });
+
+        $completedPlannedPoints = $routes->sum(function (DailyRoute $route) {
+            return $route->routePoints
+                ->where('is_planned', true)
+                ->where('is_visited', true)
+                ->count();
+        });
+
+        $extraPoints = $routes->sum(function (DailyRoute $route) {
+            return $route->routePoints
+                ->where('is_planned', false)
+                ->where('is_visited', true)
+                ->count();
+        });
+
+        return [
+            'routes_count' => $routes->count(),
+            'planned_points' => $plannedPoints,
+            'completed_points' => $completedPlannedPoints,
+            'extra_points' => $extraPoints,
+            'total_visited_points' => $completedPlannedPoints + $extraPoints,
+            'completion_percentage' => $plannedPoints > 0
+                ? round(($completedPlannedPoints / $plannedPoints) * 100, 2)
+                : 0,
+            'average_speed' => round((float) $routes->avg('average_speed'), 2),
+        ];
     }
 }
