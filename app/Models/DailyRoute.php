@@ -35,4 +35,9 @@ class DailyRoute extends Model
     {
         return $this->hasMany(RoutePoint::class);
     }
+
+    public function plannedRoutePoints(): HasMany
+    {
+        return $this->hasMany(PlannedRoutePoint::class);
+    }
 }

@@ -119,6 +119,73 @@
                 <div class="p-6 text-gray-900">
 
                     <h3 class="text-lg font-semibold mb-4">
+                        Planned route points
+                    </h3>
+
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full border border-gray-200 text-sm">
+                            <thead class="bg-gray-100">
+                                <tr>
+                                    <th class="border px-4 py-2 text-left">#</th>
+                                    <th class="border px-4 py-2 text-left">Checkpoint</th>
+                                    <th class="border px-4 py-2 text-right">Latitude</th>
+                                    <th class="border px-4 py-2 text-right">Longitude</th>
+                                    <th class="border px-4 py-2 text-center">Visited</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @forelse ($plannedRoutePoints as $plannedPoint)
+                                    @php
+                                        $wasVisited = $routePoints->contains(
+                                            'checkpoint_id',
+                                            $plannedPoint->checkpoint_id
+                                        );
+                                    @endphp
+
+                                    <tr>
+                                        <td class="border px-4 py-2">
+                                            {{ $plannedPoint->sequence_order ?? $loop->iteration }}
+                                        </td>
+
+                                        <td class="border px-4 py-2">
+                                            {{ $plannedPoint->checkpoint->name }}
+                                        </td>
+
+                                        <td class="border px-4 py-2 text-right">
+                                            {{ $plannedPoint->checkpoint->latitude }}
+                                        </td>
+
+                                        <td class="border px-4 py-2 text-right">
+                                            {{ $plannedPoint->checkpoint->longitude }}
+                                        </td>
+
+                                        <td class="border px-4 py-2 text-center">
+                                            @if ($wasVisited)
+                                                <span class="text-green-600 font-semibold">Yes</span>
+                                            @else
+                                                <span class="text-red-600 font-semibold">No</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="border px-4 py-4 text-center text-gray-500">
+                                            No planned points found for this route.
+                                        </td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 text-gray-900">
+
+                    <h3 class="text-lg font-semibold mb-4">
                         Route points
                     </h3>
 

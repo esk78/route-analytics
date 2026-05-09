@@ -48,11 +48,17 @@ class DailyRouteController extends Controller
         $dailyRoute->load([
             'inspector.team',
             'routePoints.checkpoint',
+            'plannedRoutePoints.checkpoint',
         ]);
 
         $routePoints = $dailyRoute->routePoints()
             ->with('checkpoint')
             ->orderBy('visited_at')
+            ->get();
+
+        $plannedRoutePoints = $dailyRoute->plannedRoutePoints()
+            ->with('checkpoint')
+            ->orderBy('sequence_order')
             ->get();
 
         $mapPoints = $routePoints->map(function ($point) {
@@ -71,6 +77,7 @@ class DailyRouteController extends Controller
             'route' => $dailyRoute,
             'routePoints' => $routePoints,
             'mapPoints' => $mapPoints,
+            'plannedRoutePoints' => $plannedRoutePoints,
         ]);
     }
 }

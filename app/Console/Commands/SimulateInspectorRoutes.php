@@ -67,6 +67,7 @@ class SimulateInspectorRoutes extends Command
             );
 
             $dailyRoute->routePoints()->delete();
+            $dailyRoute->plannedRoutePoints()->delete();
 
             $baseCheckpoint = Checkpoint::query()
                 ->inRandomOrder()
@@ -89,9 +90,22 @@ class SimulateInspectorRoutes extends Command
                     ->get();
             }
 
+            foreach ($plannedCheckpoints as $index => $checkpoint) {
+                $dailyRoute->plannedRoutePoints()->create([
+                    'checkpoint_id' => $checkpoint->id,
+                    'sequence_order' => $index + 1,
+                ]);
+            }
+
+            $actualPlannedPointsCount = $plannedCheckpoints->count();
+
+            $dailyRoute->update([
+                'planned_points_count' => $actualPlannedPointsCount,
+            ]);
+
             $visitedCount = fake()->numberBetween(
-                min(5, $plannedPointsCount),
-                $plannedPointsCount
+                min(5, $actualPlannedPointsCount),
+                $actualPlannedPointsCount
             );
 
             $visitedAt = Carbon::parse($routeDate)->setHour(9)->setMinute(0);
@@ -201,10 +215,9 @@ class SimulateInspectorRoutes extends Command
 
             $dailyRoute->update([
                 'completed_points_count' => $completedPointsCount,
-                'completion_percentage' => round(
-                    ($completedPointsCount / $plannedPointsCount) * 100,
-                    2
-                ),
+                'completion_percentage' => $actualPlannedPointsCount > 0
+                    ? round(($completedPointsCount / $actualPlannedPointsCount) * 100, 2)
+                    : 0,
                 'average_speed' => $averageSpeed,
             ]);
 
