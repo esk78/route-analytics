@@ -84,7 +84,11 @@ class ReportController extends Controller
     private function buildReportData($routes): array
     {
         $plannedPoints = $routes->sum(function (DailyRoute $route) {
-            return $route->plannedRoutePoints->count();
+            $plannedRoutePointsCount = $route->plannedRoutePoints->count();
+
+            return $plannedRoutePointsCount > 0
+                ? $plannedRoutePointsCount
+                : $route->planned_points_count;
         });
 
         $completedPlannedPoints = $routes->sum(function (DailyRoute $route) {

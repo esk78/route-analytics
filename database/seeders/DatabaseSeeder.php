@@ -7,6 +7,7 @@ use App\Models\DailyRoute;
 use App\Models\Inspector;
 use App\Models\Team;
 use App\Models\User;
+use App\Services\CheckpointGenerator;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
@@ -28,7 +29,22 @@ class DatabaseSeeder extends Seeder
             'password' => bcrypt('11111111'),
         ]);
 
-        $checkpoints = Checkpoint::factory()->count(300)->create();
+        if (Checkpoint::query()->count() === 0) {
+            $this->command->info('Generating 1,000,000 checkpoints...');
+
+            app(CheckpointGenerator::class)->generate(
+                count: 1_000_000,
+                chunkSize: 5000,
+                fresh: false
+            );
+
+            $this->command->info('Checkpoints generated.');
+        }
+
+        $checkpoints = Checkpoint::query()
+            ->inRandomOrder()
+            ->limit(1000)
+            ->get();
 
         Team::factory()->count(5)->create()->each(function (Team $team) use ($checkpoints) {
             $inspectors = Inspector::factory()->count(4)->create([
