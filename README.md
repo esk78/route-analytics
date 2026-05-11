@@ -151,3 +151,41 @@ http://localhost
 ```
 User: test@example.com
 Pass: 11111111
+
+## Симуляція маршрутів
+
+Вручну
+```bash
+./vendor/bin/sail artisan routes:simulate
+```
+
+Запустити симуляцію на конкретну дату:
+```bash
+./vendor/bin/sail artisan routes:simulate --date=2026-05-11
+```
+
+Обмежити кількість контролерів
+```bash
+./vendor/bin/sail artisan routes:simulate --inspectors=5
+```
+
+## Scheduler
+Команду симуляції можна запускати автоматично через Laravel Scheduler.
+
+У файлі routes/console.php має бути:
+```php
+use Illuminate\Support\Facades\Schedule;
+
+Schedule::command('routes:simulate')
+    ->dailyAt('09:00');
+```
+
+Для локальної перевірки:
+```bash
+./vendor/bin/sail artisan schedule:work
+```
+
+Для production-середовища потрібно додати cron:
+```bash
+* * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
+```
