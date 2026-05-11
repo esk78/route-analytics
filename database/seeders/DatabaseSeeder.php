@@ -68,9 +68,11 @@ class DatabaseSeeder extends Seeder
 
                     $plannedCheckpoints = $checkpoints->random($plannedPointsCount);
 
-                    $visitedCount = fake()->numberBetween(5, $plannedPointsCount);
+                    // $visitedCount = fake()->numberBetween(5, $plannedPointsCount);
+                    $visitedCount = 0;
 
-                    $visitedAt = Carbon::parse($routeDate)->setHour(9);
+                    // $visitedAt = Carbon::parse($routeDate)->setHour(9);
+                    $visitedAt = null;
 
                     foreach ($plannedCheckpoints->take($visitedCount) as $index => $checkpoint) {
                         $visitedAt = $visitedAt->addMinutes(fake()->numberBetween(5, 25));

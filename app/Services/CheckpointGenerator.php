@@ -30,8 +30,8 @@ class CheckpointGenerator
 
                 $rows[] = [
                     'name' => "Checkpoint $number",
-                    'latitude' => fake()->randomFloat(7, 44.0, 52.3),
-                    'longitude' => fake()->randomFloat(7, 22.0, 40.2),
+                    'latitude' => fake()->randomFloat(7, 49.85, 48.08),
+                    'longitude' => fake()->randomFloat(7, 27.38, 29.98),
                     'created_at' => now(),
                     'updated_at' => now(),
                 ];
