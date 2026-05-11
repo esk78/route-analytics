@@ -2,14 +2,14 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Route details
+                Деталі маршруту
             </h2>
 
             <a
                 href="{{ route('daily-routes.index') }}"
                 class="text-sm text-blue-600 hover:underline"
             >
-                Back to routes
+                Назад до маршрутів
             </a>
         </div>
     </x-slot>
@@ -21,35 +21,35 @@
                 <div class="p-6 text-gray-900">
 
                     <h3 class="text-lg font-semibold mb-4">
-                        General information
+                        Загальна інформація
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div class="border rounded-lg p-4">
-                            <div class="text-sm text-gray-500">Date</div>
+                            <div class="text-sm text-gray-500">Дата</div>
                             <div class="text-xl font-semibold">
                                 {{ $route->route_date->format('Y-m-d') }}
                             </div>
                         </div>
 
                         <div class="border rounded-lg p-4">
-                            <div class="text-sm text-gray-500">Team</div>
+                            <div class="text-sm text-gray-500">Команда</div>
                             <div class="text-xl font-semibold">
                                 {{ $route->inspector->team->name }}
                             </div>
                         </div>
 
                         <div class="border rounded-lg p-4">
-                            <div class="text-sm text-gray-500">Inspector</div>
+                            <div class="text-sm text-gray-500">Контролер</div>
                             <div class="text-xl font-semibold">
                                 {{ $route->inspector->name }}
                             </div>
                         </div>
 
                         <div class="border rounded-lg p-4">
-                            <div class="text-sm text-gray-500">Average speed</div>
+                            <div class="text-sm text-gray-500">Сер. швидкість</div>
                             <div class="text-xl font-semibold">
-                                {{ $route->average_speed ? $route->average_speed . ' km/h' : '-' }}
+                                {{ $route->average_speed ? $route->average_speed . ' км/год' : '-' }}
                             </div>
                         </div>
                     </div>
@@ -61,26 +61,26 @@
                 <div class="p-6 text-gray-900">
 
                     <h3 class="text-lg font-semibold mb-4">
-                        Route statistics
+                        Статистика маршруту
                     </h3>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div class="border rounded-lg p-4">
-                            <div class="text-sm text-gray-500">Planned points</div>
+                            <div class="text-sm text-gray-500">Заплановані точки</div>
                             <div class="text-2xl font-bold">
                                 {{ $route->planned_points_count }}
                             </div>
                         </div>
 
                         <div class="border rounded-lg p-4">
-                            <div class="text-sm text-gray-500">Completed points</div>
+                            <div class="text-sm text-gray-500">Пройдені точки</div>
                             <div class="text-2xl font-bold">
                                 {{ $route->completed_points_count }}
                             </div>
                         </div>
 
                         <div class="border rounded-lg p-4">
-                            <div class="text-sm text-gray-500">Completion</div>
+                            <div class="text-sm text-gray-500">Виконання</div>
                             <div class="text-2xl font-bold">
                                 {{ $route->completion_percentage }}%
                             </div>
@@ -103,7 +103,7 @@
                 <div class="p-6 text-gray-900">
 
                     <h3 class="text-lg font-semibold mb-4">
-                        Route map
+                        Мапа маршруту
                     </h3>
 
                     <div
@@ -119,7 +119,7 @@
                 <div class="p-6 text-gray-900">
 
                     <h3 class="text-lg font-semibold mb-4">
-                        Planned route points
+                        Заплановані точки
                     </h3>
 
                     <div class="overflow-x-auto">
@@ -127,10 +127,10 @@
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="border px-4 py-2 text-left">#</th>
-                                    <th class="border px-4 py-2 text-left">Checkpoint</th>
-                                    <th class="border px-4 py-2 text-right">Latitude</th>
-                                    <th class="border px-4 py-2 text-right">Longitude</th>
-                                    <th class="border px-4 py-2 text-center">Visited</th>
+                                    <th class="border px-4 py-2 text-left">Точка</th>
+                                    <th class="border px-4 py-2 text-right">Широта</th>
+                                    <th class="border px-4 py-2 text-right">Довгота</th>
+                                    <th class="border px-4 py-2 text-center">Пройдено</th>
                                 </tr>
                             </thead>
 
@@ -162,16 +162,16 @@
 
                                         <td class="border px-4 py-2 text-center">
                                             @if ($wasVisited)
-                                                <span class="text-green-600 font-semibold">Yes</span>
+                                                <span class="text-green-600 font-semibold">Так</span>
                                             @else
-                                                <span class="text-red-600 font-semibold">No</span>
+                                                <span class="text-red-600 font-semibold">Ні</span>
                                             @endif
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
                                         <td colspan="5" class="border px-4 py-4 text-center text-gray-500">
-                                            No planned points found for this route.
+                                            Немає запланованих точок.
                                         </td>
                                     </tr>
                                 @endforelse
@@ -186,7 +186,7 @@
                 <div class="p-6 text-gray-900">
 
                     <h3 class="text-lg font-semibold mb-4">
-                        Route points
+                        Точки маршруту
                     </h3>
 
                     <div class="overflow-x-auto">
@@ -194,13 +194,13 @@
                             <thead class="bg-gray-100">
                                 <tr>
                                     <th class="border px-4 py-2 text-left">#</th>
-                                    <th class="border px-4 py-2 text-left">Checkpoint</th>
-                                    <th class="border px-4 py-2 text-right">Latitude</th>
-                                    <th class="border px-4 py-2 text-right">Longitude</th>
-                                    <th class="border px-4 py-2 text-left">Visited at</th>
-                                    <th class="border px-4 py-2 text-center">Planned</th>
-                                    <th class="border px-4 py-2 text-center">Visited</th>
-                                    <th class="border px-4 py-2 text-right">Speed from previous</th>
+                                    <th class="border px-4 py-2 text-left">Точка</th>
+                                    <th class="border px-4 py-2 text-right">Широта</th>
+                                    <th class="border px-4 py-2 text-right">Довгота</th>
+                                    <th class="border px-4 py-2 text-left">Пройдено в</th>
+                                    <th class="border px-4 py-2 text-center">Заплановано</th>
+                                    <th class="border px-4 py-2 text-center">Пройдено</th>
+                                    <th class="border px-4 py-2 text-right">Швидкість від попер.</th>
                                 </tr>
                             </thead>
 
@@ -229,28 +229,28 @@
 
                                         <td class="border px-4 py-2 text-center">
                                             @if ($point->is_planned)
-                                                <span class="text-green-600 font-semibold">Yes</span>
+                                                <span class="text-green-600 font-semibold">Так</span>
                                             @else
-                                                <span class="text-red-600 font-semibold">No</span>
+                                                <span class="text-red-600 font-semibold">Ні</span>
                                             @endif
                                         </td>
 
                                         <td class="border px-4 py-2 text-center">
                                             @if ($point->is_visited)
-                                                <span class="text-green-600 font-semibold">Yes</span>
+                                                <span class="text-green-600 font-semibold">Так</span>
                                             @else
-                                                <span class="text-red-600 font-semibold">No</span>
+                                                <span class="text-red-600 font-semibold">Ні</span>
                                             @endif
                                         </td>
 
                                         <td class="border px-4 py-2 text-right">
-                                            {{ $point->speed_from_previous ? $point->speed_from_previous . ' km/h' : '-' }}
+                                            {{ $point->speed_from_previous ? $point->speed_from_previous . ' км/год' : '-' }}
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
                                         <td colspan="8" class="border px-4 py-4 text-center text-gray-500">
-                                            No points found for this route.
+                                            Немає точок.
                                         </td>
                                     </tr>
                                 @endforelse

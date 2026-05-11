@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Daily Routes
+            Щоденні маршрути
         </h2>
     </x-slot>
 
@@ -12,14 +12,14 @@
                 <div class="p-6 text-gray-900">
 
                     <h3 class="text-lg font-semibold mb-4">
-                        Routes overview
+                        Огляд маршрутів
                     </h3>
 
                     <form method="GET" action="{{ route('daily-routes.index') }}" class="mb-6">
                         <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
                             <div>
                                 <label for="team_id" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Team
+                                    Команда
                                 </label>
 
                                 <select
@@ -42,7 +42,7 @@
 
                             <div>
                                 <label for="inspector_id" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Inspector
+                                    Контролер
                                 </label>
 
                                 <select
@@ -65,7 +65,7 @@
 
                             <div>
                                 <label for="date_from" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Date from
+                                    Дата з
                                 </label>
 
                                 <input
@@ -79,7 +79,7 @@
 
                             <div>
                                 <label for="date_to" class="block text-sm font-medium text-gray-700 mb-1">
-                                    Date to
+                                    Дата по
                                 </label>
 
                                 <input
@@ -96,14 +96,14 @@
                                     type="submit"
                                     class="px-4 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-700"
                                 >
-                                    Filter
+                                    Фільтр
                                 </button>
 
                                 <a
                                     href="{{ route('daily-routes.index') }}"
                                     class="px-4 py-2 bg-gray-200 text-gray-800 rounded-md hover:bg-gray-300"
                                 >
-                                    Reset
+                                    Скинути
                                 </a>
                             </div>
                         </div>
@@ -113,15 +113,15 @@
                         <table class="min-w-full border border-gray-200 text-sm">
                             <thead class="bg-gray-100">
                                 <tr>
-                                    <th class="border px-4 py-2 text-left">Date</th>
-                                    <th class="border px-4 py-2 text-left">Team</th>
-                                    <th class="border px-4 py-2 text-left">Inspector</th>
-                                    <th class="border px-4 py-2 text-right">Planned</th>
-                                    <th class="border px-4 py-2 text-right">Completed</th>
-                                    <th class="border px-4 py-2 text-right">Completion</th>
-                                    <th class="border px-4 py-2 text-right">Avg speed</th>
-                                    <th class="border px-4 py-2 text-right">Points</th>
-                                    <th class="border px-4 py-2 text-right">Actions</th>
+                                    <th class="border px-4 py-2 text-left">Дата</th>
+                                    <th class="border px-4 py-2 text-left">Команда</th>
+                                    <th class="border px-4 py-2 text-left">Контролер</th>
+                                    <th class="border px-4 py-2 text-right">Заплановані</th>
+                                    <th class="border px-4 py-2 text-right">Пройдені</th>
+                                    <th class="border px-4 py-2 text-right">Виконання</th>
+                                    <th class="border px-4 py-2 text-right">Сер. швидкість</th>
+                                    <th class="border px-4 py-2 text-right">Точки</th>
+                                    <th class="border px-4 py-2 text-right">Дії</th>
                                 </tr>
                             </thead>
 
@@ -153,7 +153,7 @@
                                         </td>
 
                                         <td class="border px-4 py-2 text-right">
-                                            {{ $route->average_speed ? $route->average_speed . ' km/h' : '-' }}
+                                            {{ $route->average_speed ? $route->average_speed . ' км/год' : '-' }}
                                         </td>
 
                                         <td class="border px-4 py-2 text-right">
@@ -165,14 +165,14 @@
                                                 href="{{ route('daily-routes.show', $route) }}"
                                                 class="text-blue-600 hover:underline"
                                             >
-                                                View
+                                                Перегляд
                                             </a>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
                                         <td colspan="9" class="border px-4 py-4 text-center text-gray-500">
-                                            No routes found.
+                                            Маршрутів не знайдено.
                                         </td>
                                     </tr>
                                 @endforelse

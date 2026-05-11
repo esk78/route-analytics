@@ -16,10 +16,10 @@
                         {{ __('Dashboard') }}
                     </x-nav-link>
                     <x-nav-link :href="route('daily-routes.index')" :active="request()->routeIs('daily-routes.*')">
-                        {{ __('Routes') }}
+                        {{ __('Маршрути') }}
                     </x-nav-link>
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
-                        {{ __('Reports') }}
+                        {{ __('Звіти') }}
                     </x-nav-link>
                 </div>
             </div>
