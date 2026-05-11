@@ -21,6 +21,9 @@
                     <x-nav-link :href="route('reports.index')" :active="request()->routeIs('reports.*')">
                         {{ __('Звіти') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('checkpoints.index')" :active="request()->routeIs('checkpoints.*')">
+                        {{ __('Точки') }}
+                    </x-nav-link>
                 </div>
             </div>
 

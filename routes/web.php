@@ -3,11 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\DailyRouteController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\CheckpointController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
-});
+    return view('dashboard');
+})->middleware(['auth', 'verified']);
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -24,6 +25,10 @@ Route::get('/daily-routes/{dailyRoute}', [DailyRouteController::class, 'show'])
 Route::get('/reports', [ReportController::class, 'index'])
     ->middleware(['auth'])
     ->name('reports.index');
+
+Route::resource('checkpoints', CheckpointController::class)
+    ->middleware(['auth'])
+    ->except(['show']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -77,7 +77,7 @@ class SimulateInspectorRoutes extends Command
                 ->near(
                     (float) $baseCheckpoint->latitude,
                     (float) $baseCheckpoint->longitude,
-                    0.7
+                    0.3
                 )
                 ->inRandomOrder()
                 ->limit($plannedPointsCount)
@@ -114,7 +114,7 @@ class SimulateInspectorRoutes extends Command
             $previousVisitedAt = null;
 
             foreach ($plannedCheckpoints->take($visitedCount) as $index => $checkpoint) {
-                $travelMinutes = fake()->numberBetween(5, 25);
+                $travelMinutes = fake()->numberBetween(20, 60);
 
                 $visitedAt = $visitedAt->copy()->addMinutes($travelMinutes);
 

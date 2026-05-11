@@ -22,6 +22,11 @@ class Checkpoint extends Model
         return $this->hasMany(RoutePoint::class);
     }
 
+    public function plannedRoutePoints(): HasMany
+    {
+        return $this->hasMany(PlannedRoutePoint::class);
+    }
+
     public function scopeNear(
         Builder $query,
         float $latitude,

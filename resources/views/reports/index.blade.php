@@ -96,7 +96,7 @@
                                     <th class="border px-4 py-2 text-left">Команда</th>
                                     <th class="border px-4 py-2 text-right">Маршрути</th>
                                     <th class="border px-4 py-2 text-right">Заплановані</th>
-                                    <th class="border px-4 py-2 text-right">Виконання запланованих</th>
+                                    <th class="border px-4 py-2 text-right">Пройдено запланованих</th>
                                     <th class="border px-4 py-2 text-right">Додаткові</th>
                                     <th class="border px-4 py-2 text-right">Всього пройдено</th>
                                     <th class="border px-4 py-2 text-right">Виконання</th>
@@ -162,7 +162,7 @@
                                     <th class="border px-4 py-2 text-left">Команда</th>
                                     <th class="border px-4 py-2 text-right">Маршрути</th>
                                     <th class="border px-4 py-2 text-right">Заплановані</th>
-                                    <th class="border px-4 py-2 text-right">Виконання запланованих</th>
+                                    <th class="border px-4 py-2 text-right">Пройдено запланованих</th>
                                     <th class="border px-4 py-2 text-right">Додаткові</th>
                                     <th class="border px-4 py-2 text-right">Всього пройдено</th>
                                     <th class="border px-4 py-2 text-right">Виконання</th>
