@@ -189,3 +189,21 @@ Schedule::command('routes:simulate')
 ```bash
 * * * * * cd /path-to-project && php artisan schedule:run >> /dev/null 2>&1
 ```
+
+## Тести
+
+Запуск тестів локально:
+
+php artisan test
+
+Запуск тестів через Sail:
+
+./vendor/bin/sail artisan test
+
+Для тестів використовується окрема база даних route_analytics_testing.
+
+Перед запуском тестів створіть базу:
+
+CREATE DATABASE route_analytics_testing CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+Тести не запускають DatabaseSeeder, щоб не генерувати 1 000 000 чекпоінтів під час тестування.

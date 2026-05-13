@@ -151,7 +151,7 @@
                 <div class="p-6 text-gray-900">
 
                     <h3 class="text-lg font-semibold mb-4">
-                        Порівння контролерів
+                        Порівняння контролерів
                     </h3>
 
                     <div class="overflow-x-auto">
